@@ -114,7 +114,7 @@ eventbrite:           # optional: alphanumeric key for Eventbrite registration, 
   Modify the block below if there are any special requirements.
 {% endcomment %}
 <p id="requirements">
-  <strong>Requirements:</strong> Participants must bring a laptop with a
+  <strong>Requirements:</strong> The venue is a computer suite with computers available for each attendee. If preferred, participants may bring a laptop with a
   Mac, Linux, or Windows operating system (not a tablet, Chromebook, etc.) that they have administrative privileges
   on. They should have a few specific software packages installed (listed
   <a href="#setup">below</a>). They are also required to abide by
@@ -141,7 +141,7 @@ eventbrite:           # optional: alphanumeric key for Eventbrite registration, 
 </p>
 <ul>
   <li>The room is wheelchair / scooter accessible.</li>
-  <li>Accessible restrooms are available.</li>
+  <li>Accessible toilets are available.</li>
 </ul>
 <p>
   Materials will be provided in advance of the workshop and
@@ -149,7 +149,7 @@ eventbrite:           # optional: alphanumeric key for Eventbrite registration, 
   organizers in advance.  If we can help making learning easier for
   you (e.g. sign-language interpreters, lactation facilities) please
   get in touch (using contact details below) and we will
-  attempt to provide them.
+  do our best to provide them.
 </p>
 
 {% comment %}
