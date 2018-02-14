@@ -750,7 +750,7 @@ eventbrite:           # optional: alphanumeric key for Eventbrite registration, 
 </div> {% comment %} End of 'OpenRefine' section. {% endcomment %}
 -->
 
-<!-->
+<!--
 {% comment %}
 <div id="vm">
   <h3>Virtual Machine</h3>
