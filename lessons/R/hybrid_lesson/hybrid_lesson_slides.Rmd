@@ -1,15 +1,13 @@
 ---
 title: 'Programming in R'
 author: "Leighton Pritchard"
-date: "11-12/1/2018"
+date: "20-21/3/2018"
 output:
   ioslides_presentation:
     css: ./includes/custom.css
     font-family: 'Helvetica'
     widescreen: True
-#    mathjax: local
     self_contained: True
-# runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
