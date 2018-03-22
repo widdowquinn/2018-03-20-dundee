@@ -1,0 +1,1208 @@
+The Unix Shell
+========================================================
+author: Chris Cole
+date: March 2018
+autosize: true
+css: custom.css
+width: 1920
+height: 1080
+
+
+Background
+========================================================
+
+At a high level, computers do four things:
+
+- run programs
+- store data
+- communicate with each other
+- interact with us
+
+Interaction can be done in many different ways:
+
+- Keyboard & mouse
+- Touch screen
+- Speech
+- etc
+
+Graphical User Interfaces (GUIs)
+================================
+
+Nowadays the most common way to interact with a computer is via a Graphical User Interface (GUI).
+
+![GUI example](gui.png)
+
+They respond to mouse clicks and you interact with them via menus, icons and windows. 
+
+Each of these elements have commands attached to them to translate the instruction into the relevant action by the computer.
+
+The Shell
+===============================
+
+The shell is a program like any other, but instead you interact with it via a _command-line_ interface. It is most commonly used to run other programs.
+
+There are many different flavours of the shell, the most common (and usually the default) being _bash_ (the Bourne again SHell). 
+
+The heart of the command-line is the _read-evaluate-print_ loop (**REPL**) which occurs every time you press the Enter/Return key.
+
+1. Reads command
+2. Evaluates (or executes) it
+3. Prints the output
+
+How does it look?
+==============================
+
+A typical command looks a bit like this:
+
+    bash-3.2$ 
+    bash-3.2$ ls -F / 
+    Applications/         System/
+    Library/              Users/
+    Network/              Volumes/
+    bash-3.2$ 
+
+What's going on?
+============================
+
+If we go back to the **REPL** definition.
+
+1. Read: ls -F /
+2. Evaluate:
+    ls  <- command (case is important)
+    -F  <- flag (optional)
+    /   <- argument
+3. Print
+
+What do errors look like?
+===================================
+
+What happens if you mistype a command? Will the world end?!
+
+Surprisingly no! Usually just get a (self-explanatory) error.
+
+     $ ls-F /
+     -bash: ls-F: command not found
+
+***
+
+![mushroom cloud](713777.jpg)
+
+What do errors look like?
+===================================
+
+What happens if you mistype a command? Will the world end?!
+
+Surprisingly no! Usually just get a (self-explanatory) error.
+
+     $ ls - F 
+     ls: -: No such file or directory
+     ls: F: No such file or directory
+
+***
+
+![mushroom cloud](713777.jpg)
+
+Getting Help
+============================
+
+All built-in linux/unix commands come with help.
+
+There are two ways to access help. For example get help with the `ls` command:
+
+    $ ls --help
+    $ man ls
+
+The first is usually more succinct that the second.
+
+Even `man` has a manual page:
+
+    $ man man
+
+Is the linux commandline difficult?
+=================================
+incremental: true
+
+Yes and no.
+
+Yes:
+* it is very different 
+* unforgiving. Little mistakes are as important as big ones
+* requires knowledge (and Google :))
+* no help
+
+***
+No:
+* consistent and logical
+* explicit
+* extremely flexible
+* lots of help
+
+
+Contrived Example: Nelle's Pipeline
+==========================================
+type: section
+
+Overview
+======================
+
+Nelle Nemo, a marine biologist, has just returned from a six-month survey of the North Pacific Gyre, where she has been sampling gelatinous marine life in the Great Pacific Garbage Patch. She has 1520 samples in all and now needs to:
+
+* Assay each sample for the relative abundance of 300 different proteins. 
+* Calculate statistics for each of the proteins separately using a program her supervisor wrote called _goostats_.
+* Write up results by the end of the month to appear in an upcoming special issue of Aquatic Goo Letters.
+
+**Issues**
+* Each sample takes 30min to assay, but she has eight machines that can be run in parallel. Should take about 2 weeks.
+* _goostats_ has be run by hand. Enter filenames and hit "OK" 1520 times.
+* At 30sec per sample will 12 hours non-stop. More like 2-3 days.
+
+Can this be done better?
+
+Navigating the Filesystem
+================================
+type: sub-section
+
+**Questions**
+* How can I move around on my computer?
+* How can I see what files and directories I have?
+* How can I specify the location of a file or directory on my computer?
+
+***
+**Objectives**
+* Explain the similarities/differences between a file and a directory.
+* Translate an absolute path into a relative path and vice versa.
+* Construct absolute and relative paths.
+* Be aware of and use tab completion.
+
+The Filesystem
+=======================
+title: true
+
+The operating system is in charge of storing your files and directories (folders) via the **file system**. The filesystem stores information about files like location, size, permissions, etc. 
+
+When you first open a shell window the command prompt will be in your "home directory".
+
+    $ pwd
+    /Users/nelle
+
+_pwd_ shows you the **path** to the current **working directory**.
+
+The Filesystem
+==============================
+title: false
+
+The filesystem is heirarchical. 
+
+![filesystem](filesystem.svg)
+
+With all files and directories being stems from the **root**, '/', at the top of the tree.
+
+
+Home Directories
+==============================
+
+All users have their own **home directory**, which form part of the filesystem heirarchy. 
+
+An individual's files will all exist within the **home directory**.
+
+![filesystem](home-directories.svg)
+
+Given the above filesystem, these three users have the following **home directory** paths:
+
+    /Users/imhotep
+    /Users/larry
+    /Users/nelle
+
+Home Directories
+=============================
+
+Those paths are typical for Mac users. On Windows it may look like this (it depends on version and setup):
+
+    C:\Documents and Settings\nelle
+    C:\Users\nelle
+    
+Linux:
+
+    /home/nelle
+
+Shortcut for the homedir path is `~` (tilde) character.
+
+Listing files
+===========================
+
+`ls` - command which lists files. e.g.
+
+    $ ls 
+    $ ls -F
+
+
+Exercise - More ls Flags
+===================================
+
+What does the command ls do when used with the `-l` and `-h` flags?
+
+Use `man ls` to help you.
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+Course Material Data
+===============================
+
+On the IT suite computers copy the `data-shell.zip` file from your USB drive to the **Desktop** folder on your **H: drive**.
+
+Then extract it using **7-Zip** menu item:
+
+![unzip](extract_zip.PNG)
+
+Everyone else, using your computer's file manager, copy the `data-shell.zip` file from your USB drive to the Desktop and unzip it (usually double-clicking the file icon is sufficient).
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+
+Navigating Paths and Directories
+=======================
+
+`ls` will also list the contents of other directories than the current one.
+
+E.g. this will list the contents of the `Desktop` directory. On most computers this is usually a subdirectory of your home directory (or homedir).
+
+    $ ls Desktop
+    
+You should see the `data-shell` directory.
+
+More Paths
+====================
+
+We can use `ls` to see more by traversing the filesystem heirarchy by specifying a **path** to the directory or file of interest.
+
+    $ ls -F Desktop/data-shell
+    
+We can also **move** to a particular by **changing directory** with the `cd` command.
+
+    $ cd Desktop
+    $ cd data-shell
+    $ cd data
+
+Path Shortcuts
+=====================
+
+If the current path is as follows
+
+    $ pwd
+    /Users/nelle/Desktop/data-shell/data
+
+How do we go **up** the directory tree?
+
+    $ cd data-shell
+    -bash: cd: data-shell: No such file or directory
+
+This doesn't work as `cd` only sees sub-directories in the current directory. We could do:
+
+    $ cd /Users/nelle/Desktop/data-shell
+
+or there's the `..` shortcut which means the **parent** of the current directory.
+
+    $ cd ..
+
+Path Shortcuts
+========================
+
+`..` is a special name and it exists in every directory which can see with:
+
+    $ ls -a -F
+    ./   .bash_profile  data/       north-pacific-gyre/  pizza.cfg  thesis/ ../  creatures/     molecules/  notes.txt            solar.pdf  writing/
+
+The `-a` flag to `ls` displays all files including special and hidden files.
+
+`.` is another special name meaning **this** directory.
+
+So what does this command do?
+
+    $ cd .
+
+Hidden files
+=======================
+
+All files or directories that start with a '.' are deemed 'hidden' and are ignored by default by `ls`. 
+
+Hidden files are usually configuration files and should be ignored. 
+
+**DO NOT** delete them as they may store important information that will affect the proper running of programs.
+
+
+Exercise - Absolute vs Relative Paths
+=======================
+
+Starting from `/Users/amanda/data/`, which of the following commands could Amanda use to navigate to her home directory, which is `/Users/amanda`?
+
+    cd .
+    cd /
+    cd /home/amanda
+    cd ../..
+    cd ~
+    cd home
+    cd ~/data/..
+    cd
+    cd ..
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+Exercise - Path resolution
+===========================
+
+![challenge](filesystem-challenge.svg)
+
+Using the filesystem diagram below, if pwd displays `/Users/thing`, what will `ls -F ../backup` display?
+
+    ../backup: No such file or directory
+    2012-12-01 2013-01-08 2013-01-27
+    2012-12-01/ 2013-01-08/ 2013-01-27/
+    original/ pnas_final/ pnas_sub/
+
+(5 min)
+
+Exercise - ls Comprehension
+=====================
+
+![challenge](filesystem-challenge.svg)
+
+Assuming a directory structure (left), if pwd displays `/Users/backup` , and `-r` tells `ls` to display things in reverse order, what command will display:
+
+    pnas_sub/ pnas_final/ original/
+
+1. ls pwd
+2. ls -r -F
+3. ls -r -F /Users/backup
+4. Either #2 or #3 above, but not #1.
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+Nelle’s Pipeline: Organizing Files
+====================================
+
+Knowing just this much about files and directories, Nelle is ready to organize the files that the protein assay machine will create. First, she creates a directory called `north-pacific-gyre`. Inside that, she creates a directory called `2012-07-03`, which is the date she started processing the samples. 
+
+She used to use names like `conference-paper` and `revised-results`, but she found them hard to understand after a couple of years. (The final straw was when she found herself creating a directory called `revised-revised-results-3`.)
+
+Sorting Output
+===============================
+incremental: true
+
+Nelle names her directories **year-month-day**, with leading zeroes for months and days, because the shell displays file and directory names in alphabetical order. If she used month names, December would come before July; if she didn’t use leading zeroes, November (‘11’) would come before July (‘7’). Similarly, putting the year first means that June 2012 will come before June 2013.
+
+***
+**ISO 8601**
+![xkcd iso8601](XKCD_iso_8601_2x.png)
+
+Nelle's Filenaming
+================================
+
+Her lab uses a unique ten-character ID for her samples e.g. **NENE01729A** 
+
+Used to log the location, time, depth, and other characteristics of the sample.
+
+Keep the same system for filename. 
+
+The assay machine’s output is plain text, she will call her files `NENE01729A.txt`, `NENE01812A.txt`, etc. All 1520 files will go into the same directory.
+
+Tab autocompletion
+==================================
+Now in her current directory data-shell, Nelle can see what files she has using the command:
+
+    $ cd north-pacific-gyre/2012-07-03/
+
+This is a lot to type and gets tedious if done a lot, but there's short cut: **tab autocompletion**
+
+    $ cd nor
+    [tab]
+    $ cd north-pacific-gyre/
+    [tab]
+    2012-07-03/
+
+This works for files, directories and command names.
+
+Working with the Filesystem
+=================
+type: sub-section
+
+**Questions**
+* How can I create, copy, and delete files and directories?
+* How can I edit files?
+
+***
+**Objectives**
+* Create a directory hierarchy that matches a given diagram.
+* Create files in that hierarchy using an editor or by copying and renaming existing files.
+* Delete specified files and/or directories.
+
+Creating a Directory - mkdir
+=======================
+
+Let's make a directory for Nelle's thesis, but first make sure we're in the right place.
+
+    $ pwd
+    /Users/nelle/Desktop/data-shell
+
+Using the `mkdir` command create a `thesis` directory
+
+    $ mkdir thesis
+    $ ls -F
+    creatures/  data/  molecules/  north-pacific-gyre/  notes.txt  pizza.cfg  solar.pdf  thesis/  writing/
+
+Good names for files and directories
+==========================
+
+1. Don't use spaces
+  * whitespace is what the commandline uses to separate commands from their flags and arguments. Use `-` (dash) or `_` (underscore) instead.
+2. Don't begin a name with a `-` (dash)
+  * dashes are used for commandline flags
+3. Stick with letters, numbers, `.`, `-` and `_`.
+  * avoid any special characters (`$*%@`) as they cause serious problems.
+  
+If you files that contain the above you need to use quotes to specify the names e.g.
+
+    "a file with spaces.txt"
+
+
+File names
+====================
+
+**Bad**
+
+    My experiment 1.dat
+    -1_temp.png
+    Image$5.jpg
+
+**Good**
+
+    My_experiment.1.dat
+    temp-1.png
+    image005.jpg
+
+Creating a file - Setting up Your Editor
+======================
+incremental: true
+
+Depending on your setup (and what you've installed) you have the option of **notepad++**, **nano** or if you're feeling adventurous **vim**.
+
+On the IT suite computers and if you have Windows you need to do this to get **notepad++** working on the commandline.
+
+    $ echo 'alias notepad="/c/Program\ Files/Notepad++/notepad++.exe"' >> ~/.bashrc
+
+Then restart **git-bash**.
+
+On your own machine there's nothing to do if you have a Mac or Linux - just use `nano`.
+
+Creating a file
+=====================
+
+Now we've got a new `thesis` directory let's create a new file in it using an editor.
+
+    $ cd ~/Desktop/data-shell/thesis
+    $ notepad draft.txt
+
+Enter some text and press `Ctrl-S` (or click the save icon) to save it.
+
+Exit **notepad++**
+
+Creating a file
+=======================
+
+The editor does not leave any output on the screen after it quits, but `ls` will show that we have created a new file called `draft.txt`
+
+    $ ls
+    draft.txt
+
+
+Exercise - creating files
+=======================
+
+We have seen how to create text files using the **notepad** editor. Now, try the following command:
+
+    $ touch my_file.txt
+
+What did the touch command do?
+Use `ls -l` to inspect the files. How large is `my_file.txt`?
+When might you want to create a file this way?
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+
+Deleting Files
+=====================
+incremental: true
+
+Let's delete a file.
+
+    $ pwd
+    /Users/nelle/Desktop/data-shell/thesis
+    $ rm draft.txt
+    $ ls
+    my_file.txt
+
+OK. That worked. Great. Now let's try and remove the entire `thesis` directory.
+
+    $ cd ..
+    $ rm thesis
+    rm: cannot remove `thesis': Is a directory
+
+***
+Hmm. `rm` only works with files. Try `rmdir` instead.
+
+    $ rmdir thesis
+    rmdir: thesis/: Directory not empty
+
+We need to do a _recursive_ deletion of the directory
+
+    $ rm -r thesis
+
+
+Exercise - Safely Removing Files
+=====================
+
+Create the file `thesis/quotations.txt`.
+
+What happens when we type `rm -i thesis/quotations.txt`? Why would we want this protection when using `rm`?
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+Deleting Files is Forever
+=========================
+
+`rm` is completely destructive and there is no **Trashcan** or **undo**.
+
+Once a file or directory is deleted it is **GONE**. 
+
+[insert lecture about backing up]
+
+Moving Files 
+=====================
+
+Let's recreate `thesis/draft.txt`.
+
+    $ touch thesis/draft.txt
+
+However, we now don't like that filename we can rename it with the `mv` (move) command.
+
+    $ mv thesis/draft.txt thesis/quotes.txt
+    $ ls thesis
+    draft.txt  quotes.txt
+
+What happens when we move it to the current directory.
+
+    $ mv thesis/quotes.txt .
+    $ ls thesis
+    
+
+Exercise - Moving Files
+=====================
+
+After running the following commands, Jamie realizes that she put the files `sucrose.dat` and `maltose.dat` into the wrong folder:
+
+    $ ls -F
+    analyzed/ raw/
+    $ ls -F analyzed
+    fructose.dat glucose.dat maltose.dat sucrose.dat
+    $ cd raw/
+
+Fill in the blanks to move these files to the current folder (i.e., the one she is currently in):
+
+    $ mv ___/sucrose.dat  ___/maltose.dat ___
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+Copying Files
+===================
+
+Copying files is done in a very similar way to moving, using the `cp` command.
+
+    $ cp quotes.txt thesis/quotations.txt
+    $ ls quotes.txt thesis/quotations.txt
+    quotes.txt   thesis/quotations.txt
+    
+We can now delete `quotes.txt` to prove that indeed we made a copy.
+
+    $ rm quotes.txt
+    $ ls quotes.txt thesis/quotations.txt
+    ls: cannot access quotes.txt: No such file or directory
+    thesis/quotations.txt
+
+What's In A Name?
+=======================
+
+You'll have noticed that all the files we have used are **something dot something** and most files we've used have ended in `.txt` meaning they are **text** files. 
+
+That is just a convention. They could be named anything and it wouldn't change what they are e.g. `my.thesis.file` or simply `mythesis_version_20180320`
+
+Extensions like `pdf`, `png` or `mp3` are simply descriptors and adding them to the end of files doesn't magically turn the file into a **PDF** or an **image** or some **music**.
+
+It's the content of the file that matters.
+
+
+Exercise - Renaming Files
+======================
+
+Suppose that you created a .txt file in your current directory to contain a list of the statistical tests you will need to do to analyze your data, and named it: statstics.txt
+
+After creating and saving this file you realize you misspelled the filename! You want to correct the mistake, which of the following commands could you use to do so?
+
+    cp statstics.txt statistics.txt
+    mv statstics.txt statistics.txt
+    mv statstics.txt .
+    cp statstics.txt .
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+
+(5 min)
+
+Exercise 
+========================
+
+What is the output of the closing ls command in the sequence shown below?
+
+    $ pwd
+    /Users/jamie/data
+    $ ls
+    proteins.dat
+    $ mkdir recombine
+    $ mv proteins.dat recombine/
+    $ cp recombine/proteins.dat ../proteins-saved.dat
+    $ ls
+
+1. `proteins-saved.dat recombine`
+2. `recombine`
+3. `proteins.dat recombine`
+4. `proteins-saved.dat`
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+Exercise - Organising files
+=============================
+
+Jamie is working on a project and she sees that her files aren’t very well organized:
+
+    $ ls -F
+    analyzed/  fructose.dat    raw/   sucrose.dat
+
+The fructose.dat and sucrose.dat files contain output from her data analysis. What command(s) covered in this lesson does she need to run so that the commands below will produce the output shown?
+
+    $ ls -F
+    analyzed/   raw/
+    $ ls analyzed
+    fructose.dat    sucrose.dat
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+Exercise - Copying multiple files
+=======================
+
+For this exercise, you can test the commands in the `data-shell/data` directory.
+
+In the example below, what does cp do when given several filenames and a directory name?
+
+    $ mkdir backup
+    $ cp amino-acids.txt animals.txt backup/
+
+In the example below, what does cp do when given three or more file names?
+
+    $ ls -F
+    amino-acids.txt  animals.txt  backup/  elements/  morse.txt  pdb/  planets.txt salmon.txt  sunspot.txt
+
+    $ cp amino-acids.txt animals.txt morse.txt
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+Exercise - Copying a file structure
+================================
+
+You’re starting a new experiment, and would like to duplicate the file structure from your previous experiment.
+
+Assume that the file structure is in a directory called `2016-05-18-data/`, which contains directories named `raw/` and `processed/` that contain data files. The goal is to copy the file structure of the `2016-05-18-data/` directory into a directory called `2016-05-20-data/` and remove the data files from copy.
+
+***
+Which of the following set of commands would achieve this objective? What would the other commands do?
+
+    $ cp -r 2016-05-18-data/ 2016-05-20-data/
+    $ rm 2016-05-20-data/raw/*
+    $ rm 2016-05-20-data/processed/*
+
+    $ rm 2016-05-20-data/raw/*
+    $ rm 2016-05-20-data/processed/*
+    $ cp -r 2016-05-18-data/ 2016-5-20-data/
+
+    $ cp -r 2016-05-18-data/ 2016-05-20-data/
+    $ rm -r -i 2016-05-20-data/
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+Pipes and Filters
+===================
+type: sub-section
+
+**Questions**
+* How can I combine existing commands to do new things?
+
+**Objectives**
+* Redirect a command’s output to a file.
+* Process a file instead of keyboard input using redirection.
+* Construct command pipelines with two or more stages.
+* Explain Unix’s ‘small pieces, loosely joined’ philosophy.
+
+Wildcards
+==============
+
+Let's look at the `molecules` directory.
+
+    $ cd ~/Desktop/data-shell/
+    $ ls molecules
+    cubane.pdb    ethane.pdb    methane.pdb    octane.pdb    pentane.pdb   propane.pdb
+
+These are **PDB** files which means they are **protein databank** formatted files. They contain atomic resolution molecular structures.
+
+However, they are still text files. Look at one with `less`
+
+    $ less molecules/cubane.pdb
+    
+Quit `less` by pressing `q`
+    
+Wilcards
+============
+
+Wildcards allow running commands on more than one file at a time. Here we'll use the `wc` (wordcount) command to count the number of lines in files.
+
+    $ cd molecules
+    $ wc -l *.pdb
+    20 cubane.pdb
+    12 ethane.pdb
+     9 methane.pdb
+    30 octane.pdb
+    21 pentane.pdb
+    15 propane.pdb
+    107 total
+
+***
+
+`*`  matches zero or more characters
+
+`?`  matches one character
+
+For example
+
+    $ ls *ethane.pdb
+    $ ls m?thane.pdb
+    $ ls p*.pdb
+
+
+
+Exercise - Using Wildcards
+============================
+
+When run in the molecules directory, which ls command(s) will produce this output?
+
+    ethane.pdb methane.pdb
+
+Is it?
+
+1. `ls *t*ane.pdb`
+2. `ls *t?ne.*`
+3. `ls *t??ne.pdb`
+4. `ls ethane.*`
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+Exercise - More Wildcards
+==========================
+
+Sam has a directory containing the following files:
+
+    2015-10-23-calibration.txt
+    2015-10-23-dataset1.txt
+    2015-10-23-dataset2.txt
+    2015-10-26-dataset_overview.txt
+    2015-11-23-calibration.txt
+    2015-11-23-dataset1.txt
+    2015-11-23-dataset2.txt
+    2015-11-23-dataset_overview.txt
+
+Sam wants to back up her data and send some datasets to her colleague Bob. Help Sam by filling in the blanks:
+
+    $ cp ____calibration____ /backup/calibration
+    $ cp 2015-____-____ ~/send_to_bob/all_november_files/
+    $ cp ____ ~/send_to_bob/all_datasets_created_on_a_23rd/
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+
+Exercise - Removing Unwanted Files
+=============================
+
+Suppose you want to delete your processed data files, and only keep your raw files and processing script to save storage. The raw files end in .dat and the processed files end in .txt. Which of the following would remove all the processed data files, and only the processed data files?
+
+1. `rm ?.txt`
+2. `rm *.txt`
+3. `rm * .txt`
+4. `rm *.*`
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(2 min)
+
+
+
+File Redirection
+==================
+
+What if we want to save the output from a command?
+
+We **redirect** the output from the screen to a file with the `>` (greater than) symbol. Think of it like an arrow pointing left -> right sending the output from left to right.
+
+Let's redo the `wc` on the pdb files
+
+    $ wc -l *.pdb > lengths.txt
+    $ ls lengths.txt
+
+
+Exercise - What does '>>' mean?
+======================
+
+What is the difference between:
+
+    $ echo hello > testfile01.txt
+
+and:
+
+    $ echo hello >> testfile02.txt
+
+**Hint:** Try executing each command twice in a row and then examining the output files.
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+Examining Files - head & tail
+====================
+
+We've briefly used `less` to view a file, but sometime you just want to check the start and end of file e.g. to confirm the right format or check that the file is complete.
+
+`head` and `tail` are very useful for this and work in the same way.
+
+    $ head -3 ethane.pdb     # show first three lines
+    $ tail -1 propane.pdb    # show last two lines
+
+
+Exercise - Appending Data
+======================
+
+Consider the file data-shell/data/animals.txt. After these commands, select the answer that corresponds to the file animalsUpd.txt:
+
+    $ head -3 animals.txt > animalsUpd.txt
+    $ tail -2 animals.txt >> animalsUpd.txt
+
+1. The first three lines of animals.txt
+2. The last two lines of animals.txt
+3. The first three lines and the last two lines of animals.txt
+4. The second and third lines of animals.txt
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+Pipes
+===================
+
+Pipes are by far the most powerful aspect of the linux commandline. They allow you to glue commands together to generate a /pipeline/.
+
+They are constructed with the `|` (pipe) character. The take the output of the command to the left and make it the input for the command on the right.
+
+    $ wc -l *.pdb | head -3
+
+This is the same as doing this:
+
+    $ wc -l *.pdb > lengths.txt
+    $ head -3 lengths.txt
+    
+Except there's no need for the `lengths.txt` intermediary file.
+
+This is why commandline programs are written to be simple and only do one thing. Allows the creation of lightweight pipelines simply and easily.
+
+
+Loops
+===========================
+type: sub-section
+
+**Questions**
+* How can I perform the same actions on many different files?
+
+**Objectives**
+* Write a loop that applies one or more commands to a subset of files.
+* Trace the variables during execution of the loop.
+* Explain the difference between a variable’s name and its value.
+* Explain why spaces and some punctuation characters shouldn’t be used in file names.
+* Demonstrate how to see what commands have recently been executed.
+* Re-run recently executed commands without retyping them.
+
+
+Loops
+======================
+
+Up 'til now we've run single commands on one file or a set of files. Loops allow us to execute one or more commands on many files systematically.
+
+Say we want to rename multiple files in one go e.g. create a backup of our original files before we start processing them. Will it work with a simple `cp`?
+
+    $ cd ~/Desktop/data-shell/creatures
+    $ cp *.dat original-*.dat
+
+We get an error because the command expands to:
+
+    $ cp basilisk.dat unicorn.dat original-*.dat
+
+and `cp` requires that last argument when there are more than two is a directory _not_ a file.
+
+Loops
+=======================
+
+Instead, let's try a **loop**
+
+    $ for filename in basilisk.dat unicorn.dat
+    > do
+    >    head -n 3 $filename	     # Indentation aids legibility
+    > done
+
+Let's make it a bit more generic and a bit more helpful
+
+    $ for filename in *.dat
+    > do
+    >    echo $filename
+    >    head -n 3 $filename
+    > done
+
+**Note:** see how the command prompt changes to `>` whilst in the loop? That's informing us it is waiting for further instruction.
+
+
+Exercise - Variables in Loops
+=========================
+
+This exercise refers to the `data-shell/molecules` directory. `ls` gives the following output:
+
+    cubane.pdb  ethane.pdb  methane.pdb  octane.pdb  pentane.pdb  propane.pdb
+
+What is the output of the following code?
+
+    for datafile in *.pdb
+    do
+        ls *.pdb
+    done
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+Exercise - Variables in Loops
+=========================
+title: false
+
+Now, what is the output of the following code?
+
+    for datafile in *.pdb
+    do
+    	ls $datafile
+    done
+
+Why do these two loops give different outputs?
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+Exercise - Limiting Sets of Files
+============================
+
+What would be the output of running the following loop in the data-shell/molecules directory?
+
+    for filename in c*
+    do
+        ls $filename 
+    done
+
+1. No files are listed.
+2. All files are listed.
+3. Only cubane.pdb, octane.pdb and pentane.pdb are listed.
+4. Only cubane.pdb is listed.
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+Exercise - Limiting Sets of Files 
+===========================
+title: false
+
+How would the output differ from using this command instead?
+
+    for filename in *c*
+    do
+        ls $filename 
+    done
+
+1. The same files would be listed.
+2. All the files are listed this time.
+3. No files are listed this time.
+4. The files cubane.pdb and octane.pdb will be listed.
+5. Only the file octane.pdb will be listed.
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+Combining Pipes and Loops
+============================
+
+Pipes and loops are perfectly compatible. Back in `data/creatures` do this:
+
+    $ for filename in *.dat
+    > do
+    >   echo $filename
+    >   head -n 100 $filename | tail -n 20
+    > done
+
+This will print out lines 81-100 for each of the `*.dat` files.
+
+Of Loops and Filenames
+=========================
+
+Here is an example where whitespace in a filename is seriously problematic. Imagine there are two additional files called "red dragon.dat" & "purple unicorn.dat".
+
+If we were to try and run the loop on these files like so:
+
+    $ for filename in red dragon.dat purple unicorn.dat
+    > do
+    >   head -n 100 $filename | tail -n 3
+    > done
+    head: cannot open ‘red’ for reading: No such file or directory
+    head: cannot open ‘dragon.dat’ for reading: No such file or directory
+    head: cannot open ‘purple’ for reading: No such file or directory
+    CGGTACCGAA
+    AAGGGTCGCG
+    CAAGTGTTCC
+
+The `for` loop thinks there are **four** files not _two_ as we expected and it ends up working on the `unicorn.dat` file, which is not what we wanted.
+
+
+Exercise - Saving To a File in a Loop
+=======================
+
+In the `data-shell/molecules` directory, what is the effect of this loop?
+
+    $ for alkanes in *.pdb
+    > do
+    >    echo $alkanes
+    >    cat $alkanes > alkanes.pdb
+    > done
+
+1. Prints cubane.pdb, ethane.pdb, methane.pdb, octane.pdb, pentane.pdb and propane.pdb, and the text from propane.pdb will be saved to a file called alkanes.pdb.
+2. Prints cubane.pdb, ethane.pdb, and methane.pdb, and the text from all three files would be concatenated and saved to a file called alkanes.pdb.
+3. Prints cubane.pdb, ethane.pdb, methane.pdb, octane.pdb, and pentane.pdb, and the text from propane.pdb will be saved to a file called alkanes.pdb.
+4. None of the above.
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+Exercise - Saving To a File in a Loop
+===================
+
+Also in the data-shell/molecules directory, what would be the output of the following loop?
+
+    $ for datafile in *.pdb
+    > do
+    >    cat $datafile >> all.pdb
+    > done
+
+1. All of the text from cubane.pdb, ethane.pdb, methane.pdb, octane.pdb, and pentane.pdb would be concatenated and saved to a file called all.pdb.
+2. The text from ethane.pdb will be saved to a file called all.pdb.
+3. All of the text from cubane.pdb, ethane.pdb, methane.pdb, octane.pdb, pentane.pdb and propane.pdb would be concatenated and saved to a file called all.pdb.
+4. All of the text from cubane.pdb, ethane.pdb, methane.pdb, octane.pdb, pentane.pdb and propane.pdb would be printed to the screen and saved to a file called all.pdb.
+
+Back to the Orignal Problem
+=================================
+
+How to cp all the original `.dat` files with a loop?
+
+    $ cd ~/Desktop/data-shell/creatures
+    $ for file in *.dat
+    > do
+    >   echo $file
+    >   cp $file original-$file
+    > done
+
+Dry Runs
+===========================
+
+It is always a good idea to have a 'dry run' before committing to a significant command. With **loops** the way to do that is to `echo` the command:
+
+    $ for file in *.dat
+    > do
+    >   echo $file
+    >   echo "cp $file original-$file"
+    > done
+
+*Always* use quote marks `"` when echoing commands. It avoids potential problems. e.g. what's wrong here?
+
+    $ for datafile in *.dat
+    > do
+    >    echo cat $datafile >> all.dat
+    > done
+
+![Stickies](https://raw.githubusercontent.com/widdowquinn/2017-01-09-dundee/gh-pages/lessons-dundee/R_reproducible_analysis/images/red_green_sticky.png)
+
+(5 min)
+
+
+What About Nelle's Data?
+============================
+
+Now, can we help do her `goostats` analysis in time to write her paper???
+
+Let's do this togther...
+
+    $ cd ../north-pacific-gyre/2012-07-03
+    $ for file in NENE*.txt
+    > do
+    >    echo $file
+    > done
+
+
+Answer
+============================
+
+This is one way to do it.
+
+    $ for f in NENE*.txt
+    > do 
+    >    echo $f
+    >    sh goostats $f stats-$f
+    > done
+
